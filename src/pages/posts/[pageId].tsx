@@ -6,6 +6,7 @@ import { parsePageId } from 'notion-utils';
 import * as config from '@/libs/config';
 import MotionLayout from '@/components/MotionLayout';
 import NotionPage from '@/components/NotionPage';
+import SEO from '@/components/SEO';
 import { getPreviewImageMap } from '@/libs/getPreviewImageMap';
 import { getSiteMap } from '@/libs/getSiteMap';
 import { notion } from '@/libs/notion';
@@ -14,6 +15,7 @@ import type { NotionPageProps } from '@/types/notion-page';
 const PostPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props) => {
   return (
     <>
+      {props.recordMap && <SEO recordMap={props.recordMap} />}
       <MotionLayout>
         <NotionPage {...props} />
       </MotionLayout>
