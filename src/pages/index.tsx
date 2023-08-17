@@ -3,6 +3,7 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import * as config from '@/libs/config';
 import MotionLayout from '@/components/MotionLayout';
 import NotionPage from '@/components/NotionPage';
+import SEO from '@/components/SEO';
 import { getPreviewImageMap } from '@/libs/getPreviewImageMap';
 import { notion } from '@/libs/notion';
 import { NotionPageProps } from '@/types/notion-page';
@@ -10,6 +11,7 @@ import { NotionPageProps } from '@/types/notion-page';
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props) => {
   return (
     <>
+      {props.recordMap && <SEO recordMap={props.recordMap} />}
       <MotionLayout>
         <NotionPage {...props} />
       </MotionLayout>
