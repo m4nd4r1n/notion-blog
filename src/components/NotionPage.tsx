@@ -9,15 +9,19 @@ import { useMemo } from 'react';
 import { formatDate, parsePageId, uuidToId } from 'notion-utils';
 import { ComponentOverrideFn, NotionRenderer } from 'react-notion-x';
 
+import * as config from '@/libs/config';
 import { useTheme } from '@/hooks/useTheme';
 import { getCanonicalPageId, normalizeTitle } from '@/libs/getCanonicalPageId';
 import { truthy } from '@/libs/truthy';
 import { NotionPageProps } from '@/types/notion-page';
 
+import GiscusComment from './GiscusComment';
 import PageHeader from './PageHeader';
+import ScrollProgressBar from './ScrollProgressBar';
 
 const NotionPage: React.FC<NotionPageProps> = ({
   recordMap,
+  isPostPage = false,
   isTagPage = false,
   propertyToFilterName = '',
   error,
@@ -68,6 +72,7 @@ const NotionPage: React.FC<NotionPageProps> = ({
 
   return (
     <>
+      {isPostPage && <ScrollProgressBar />}
       <NotionRenderer
         recordMap={recordMap}
         fullPage
@@ -78,6 +83,7 @@ const NotionPage: React.FC<NotionPageProps> = ({
         showTableOfContents
         pageTitle={title}
         bodyClassName={isTagPage ? 'tags-page' : undefined}
+        pageFooter={isPostPage && !!config.giscusConfig.repo && <GiscusComment />}
         previewImages
       />
     </>
