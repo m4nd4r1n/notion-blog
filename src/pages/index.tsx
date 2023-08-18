@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps<NotionPageProps> = async () => {
       };
     }
 
-    return { props: { error } };
+    return { props: { error }, revalidate: 10 };
   }
 };
 

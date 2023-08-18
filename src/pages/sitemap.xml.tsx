@@ -38,7 +38,7 @@ const createSitemap = (siteMap: Awaited<ReturnType<typeof getSiteMap>>) =>
       .map((canonicalPagePath) =>
         `
           <url>
-            <loc>${config.host}/posts/${canonicalPagePath}</loc>
+            <loc>${config.host}/${canonicalPagePath}</loc>
           </url>
         `.trim(),
       )

@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const authorImageBlockUrl = defaultMapImageUrl(
     blockIcon && isUrl(blockIcon)
       ? blockIcon
-      : !isUrl(blockIcon) && blockIcon.includes('/')
+      : blockIcon && !isUrl(blockIcon) && blockIcon.includes('/')
       ? `https://notion.so${blockIcon}`
       : '',
     block,

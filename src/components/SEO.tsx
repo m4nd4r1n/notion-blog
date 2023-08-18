@@ -22,7 +22,7 @@ const SEO: React.FC<SEOProps> = ({ recordMap }) => {
     : `${config.host}/api/social-image?id=${block.id}`;
   const canonicalPageUrl = isRootPage
     ? `${config.host}`
-    : `${config.host}/posts/${getCanonicalPageId(block.id, recordMap, {
+    : `${config.host}/${getCanonicalPageId(block.id, recordMap, {
         uuid: false,
       })}`;
   const siteName = getBlockTitle(
