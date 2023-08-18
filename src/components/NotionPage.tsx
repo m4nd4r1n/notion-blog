@@ -7,15 +7,17 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 import { formatDate, parsePageId, uuidToId } from 'notion-utils';
-import { ComponentOverrideFn, NotionRenderer } from 'react-notion-x';
+import { type ComponentOverrideFn, type NotionComponents, NotionRenderer } from 'react-notion-x';
 
 import * as config from '@/libs/config';
 import { useTheme } from '@/hooks/useTheme';
 import { getCanonicalPageId, normalizeTitle } from '@/libs/getCanonicalPageId';
+import { getCanoicalPageUrl } from '@/libs/getCanonicalPageUrl';
 import { truthy } from '@/libs/truthy';
 import { NotionPageProps } from '@/types/notion-page';
 
 import GiscusComment from './GiscusComment';
+import HitCounter from './HitCounter';
 import PageHeader from './PageHeader';
 import ScrollProgressBar from './ScrollProgressBar';
 
@@ -28,7 +30,7 @@ const NotionPage: React.FC<NotionPageProps> = ({
 }) => {
   const { isDarkTheme, themeLoaded } = useTheme();
   const router = useRouter();
-  const components = useMemo(
+  const components: Partial<NotionComponents> = useMemo(
     () => ({
       nextLink: Link,
       Header: PageHeader,
@@ -52,10 +54,14 @@ const NotionPage: React.FC<NotionPageProps> = ({
   if (error || !recordMap)
     return <ErrorComponent statusCode={error?.statusCode ?? 404} title={error?.message} />;
 
+  if (router.isFallback || !themeLoaded) {
+    return null;
+  }
+
   const siteMapPageUrl = (pageId: string) => {
     const searchParams = new URLSearchParams();
     const id = parsePageId(pageId, { uuid: true });
-    return uuidToId(id) === process.env.NEXT_PUBLIC_ROOT_NOTION_PAGE_ID
+    return uuidToId(id) === config.rootNotionPageId
       ? createUrl('/', searchParams)
       : createUrl(`/${getCanonicalPageId(id, recordMap, { uuid: false })}`, searchParams);
   };
@@ -65,10 +71,8 @@ const NotionPage: React.FC<NotionPageProps> = ({
   };
 
   const title = isTagPage && propertyToFilterName ? `${propertyToFilterName} Posts` : undefined;
-
-  if (router.isFallback || !themeLoaded) {
-    return null;
-  }
+  const keys = Object.keys(recordMap.block);
+  const block = recordMap.block[keys[0]].value;
 
   return (
     <>
@@ -83,8 +87,19 @@ const NotionPage: React.FC<NotionPageProps> = ({
         showTableOfContents
         pageTitle={title}
         bodyClassName={isTagPage ? 'tags-page' : undefined}
-        pageFooter={isPostPage && !!config.giscusConfig.repo && <GiscusComment />}
+        pageFooter={
+          <>
+            <HitCounter
+              targetUrl={getCanoicalPageUrl(block.id, recordMap)}
+              title='view'
+              titleBgColor='#F9B034'
+              countBgColor='#F69335'
+            />
+            {isPostPage && !!config.giscusConfig.repo && <GiscusComment />}
+          </>
+        }
         previewImages
+        footer={<></>}
       />
     </>
   );
