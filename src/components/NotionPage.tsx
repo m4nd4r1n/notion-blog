@@ -57,7 +57,7 @@ const NotionPage: React.FC<NotionPageProps> = ({
     const id = parsePageId(pageId, { uuid: true });
     return uuidToId(id) === process.env.NEXT_PUBLIC_ROOT_NOTION_PAGE_ID
       ? createUrl('/', searchParams)
-      : createUrl(`/posts/${getCanonicalPageId(id, recordMap, { uuid: false })}`, searchParams);
+      : createUrl(`/${getCanonicalPageId(id, recordMap, { uuid: false })}`, searchParams);
   };
 
   const createUrl = (path: string, searchParams: URLSearchParams) => {

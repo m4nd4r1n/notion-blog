@@ -63,6 +63,7 @@ export const getStaticProps: GetStaticProps<NotionPageProps, { pageId: string }>
       props: {
         error,
       },
+      revalidate: 10,
     };
   }
 };
