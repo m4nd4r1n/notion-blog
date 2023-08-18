@@ -5,7 +5,7 @@ import { getBlockTitle, getPageProperty, idToUuid, uuidToId } from 'notion-utils
 import { defaultMapImageUrl } from 'react-notion-x';
 
 import * as config from '@/libs/config';
-import { getCanonicalPageId } from '@/libs/getCanonicalPageId';
+import { getCanoicalPageUrl } from '@/libs/getCanonicalPageUrl';
 
 interface SEOProps {
   recordMap: ExtendedRecordMap;
@@ -20,11 +20,7 @@ const SEO: React.FC<SEOProps> = ({ recordMap }) => {
   const image = isRootPage
     ? defaultMapImageUrl((block as PageBlock).format.page_cover || '', block)
     : `${config.host}/api/social-image?id=${block.id}`;
-  const canonicalPageUrl = isRootPage
-    ? `${config.host}`
-    : `${config.host}/${getCanonicalPageId(block.id, recordMap, {
-        uuid: false,
-      })}`;
+  const canonicalPageUrl = getCanoicalPageUrl(block.id, recordMap);
   const siteName = getBlockTitle(
     recordMap.block[idToUuid(config.rootNotionPageId)].value,
     recordMap,
